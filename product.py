@@ -48,7 +48,11 @@ class ListingProcessor(object):
     def store_results(self, filename):
         with open(filename, "w") as out_file:
 
-            for manufacturer, products in self.products.iteritems():
+            if hasattr(self.products, "iteritems"):
+                products = self.products.iteritems()
+            else:
+                products = self.products.items()
+            for manufacturer, products in products:
                 out_file.writelines(
                     [
                         "{}\n".format(
