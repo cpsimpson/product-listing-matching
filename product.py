@@ -1,6 +1,26 @@
 import json
 import re
-from collections import defaultdict
+from collections import defaultdict, namedtuple
+
+
+ProductMatch = namedtuple('ProductMatch', ['quality', 'product'])
+
+
+class ProductMatchList(object):
+    def __init__(self):
+        self._matches = []
+
+    def add_match(self, match_quality, product):
+        self._matches.append(ProductMatch(match_quality, product))
+
+    def best_match(self):
+        if len(self._matches) > 1:
+            self._matches.sort(key=lambda match: match.quality, reverse=True)
+
+        if len(self._matches) > 0:
+            return self._matches[0].product
+
+        return None
 
 
 class ListingProcessor(object):
@@ -29,18 +49,16 @@ class ListingProcessor(object):
         title = listing.get("title", "")
         manufacturer = listing.get("manufacturer", "")
 
-        potential_matches = []
+        potential_matches = ProductMatchList()
         for product in self.products[manufacturer]:
 
-            match_weight = product.matches(title)
-            if match_weight > 0:
-                potential_matches.append((match_weight, product))
+            match_quality = product.calculate_match_quality(title)
+            if match_quality > 0:
+                potential_matches.add_match(match_quality, product)
 
-        if len(potential_matches) > 1:
-            potential_matches.sort(key=lambda match: match[0], reverse=True)
-
-        if len(potential_matches) > 0:
-            potential_matches[0][1].add_listing(listing)
+        best_product_match = potential_matches.best_match()
+        if best_product_match:
+            best_product_match.add_listing(listing)
             return True
 
         return False
