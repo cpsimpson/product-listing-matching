@@ -90,9 +90,6 @@ class Product(object):
         self._family = family
         self._listings = []
 
-    def __repr__(self):
-        return self.name
-
     @property
     def name(self):
         return self._name
