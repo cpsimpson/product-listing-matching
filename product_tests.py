@@ -385,7 +385,7 @@ class ListingProcessorTestCase(unittest.TestCase):
         processor = ListingProcessor()
 
         processor.products = {
-            "Canon": [longer_name, shorter_name]
+            "Canon": [shorter_name, longer_name]
         }
         match = processor.process_listing(listing)
 
