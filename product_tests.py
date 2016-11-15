@@ -14,7 +14,7 @@ class MatcherTestCase(unittest.TestCase):
             "Cyber-shot"
         )
 
-        actual_result = product.matches(
+        actual_result = product.calculate_match_quality(
             "Sony Cyber-shot DSC-W310 - Digital camera - compact - 12.1 Mpix "
             "- optical zoom: 4 x - supported memory: MS Duo, SD, MS PRO Duo, "
             "MS PRO Duo Mark2, SDHC, MS PRO-HG Duo - silver"
@@ -29,7 +29,7 @@ class MatcherTestCase(unittest.TestCase):
             None
         )
 
-        actual_result = product.matches(
+        actual_result = product.calculate_match_quality(
             "Sony Cyber-shot DSC-W310 - Digital camera - compact - 12.1 Mpix "
             "- optical zoom: 4 x - supported memory: MS Duo, SD, MS PRO Duo, "
             "MS PRO Duo Mark2, SDHC, MS PRO-HG Duo - silver"
@@ -42,7 +42,7 @@ class MatcherTestCase(unittest.TestCase):
             "Nikon_Coolpix_100", "Nikon", "100", "Coolpix"
         )
 
-        actual_result = product.matches(
+        actual_result = product.calculate_match_quality(
             "NIKON Coolpix S5100 - rose éclatant"
         )
 
@@ -50,10 +50,10 @@ class MatcherTestCase(unittest.TestCase):
 
     def test_no_match_family_is_substring(self):
         product = Product(
-            "Nikon_Coolpix_100", "Nikon", "S5100", "pix"
+            "Nikon_pix_S5100", "Nikon", "S5100", "pix"
         )
 
-        actual_result = product.matches(
+        actual_result = product.calculate_match_quality(
             "NIKON Coolpix S5100 - rose éclatant"
         )
 
@@ -76,8 +76,8 @@ class MatcherTestCase(unittest.TestCase):
              "announced-date": "2010-08-18T20:00:00.000-04:00"}
         )
 
-        self.assertFalse(product_d3000.matches(title))
-        self.assertFalse(product_d3100.matches(title))
+        self.assertFalse(product_d3000.calculate_match_quality(title))
+        self.assertFalse(product_d3100.calculate_match_quality(title))
 
     def test_product_create_from_dictionary_values_set(self):
         product = Product.create_from_dict(

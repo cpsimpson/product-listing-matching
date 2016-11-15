@@ -98,28 +98,47 @@ class Product(object):
     def manufacturer(self):
         return self._manufacturer
 
-    def matches(self, title):
+    def calculate_match_quality(self, title):
         """Assumes you have already done a manufacture match."""
+
+        match_quality = 0
+
+        if self._verify_model_match(title):
+            match_quality += 1
+        else:
+            return 0
+
+        if self._verify_family_match(title):
+            if self._family:
+                match_quality += 1
+
+            if self._verify_name_match(title):
+                match_quality += len(self.name)
+        else:
+            return 0
+
+        return match_quality
+
+    def _verify_model_match(self, title):
         model_match = re.search("\s{}\s".format(self._model), title)
         if model_match:
             accessory_match = re.search(
                 "for.*\s{}\s".format(self._model), title
             )
             if not accessory_match:
-                if self._family:
-                    if re.search("\s{}\s".format(self._family), title):
-                        split_name = self._split_name()
-                        if re.search(
-                                "\s{}\s".format(split_name), title):
-                            return 3 + len(self.name)
-                        return 2
-                else:
-                    if re.search(
-                            "\s{}\s".format(self._split_name()), title):
-                        return 2 + len(self.name)
+                return True
+        return False
 
-                    return 1
-        return 0
+    def _verify_family_match(self, title):
+        if self._family:
+            return re.search("\s{}\s".format(self._family), title)
+        else:
+            return True
+
+    def _verify_name_match(self, title):
+        split_name = self._split_name()
+        return re.search(
+                "\s{}\s".format(split_name), title)
 
     def _split_name(self):
         return " ".join(re.split("_", self._name))
