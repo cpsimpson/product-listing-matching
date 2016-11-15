@@ -66,11 +66,13 @@ class ListingProcessor(object):
     def store_results(self, filename):
         with open(filename, "w") as out_file:
 
+            # handle iteritems being removed in Python 3.
             if hasattr(self.products, "iteritems"):
-                products = self.products.iteritems()
+                products_by_manufacturer = self.products.iteritems()
             else:
-                products = self.products.items()
-            for manufacturer, products in products:
+                products_by_manufacturer = self.products.items()
+
+            for manufacturer, products in products_by_manufacturer:
                 out_file.writelines(
                     [
                         "{}\n".format(
