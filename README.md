@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cpsimpson/product-listing-matching.svg?branch=master)](https://travis-ci.org/cpsimpson/product-listing-matching)
+
 # product-listing-matching
 
 To run:
